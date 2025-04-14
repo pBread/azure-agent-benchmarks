@@ -32,4 +32,6 @@ export async function toolExecution(threadId: string) {
   }
 
   logger.printSnapshots();
+
+  return logger.printSnapshots;
 }

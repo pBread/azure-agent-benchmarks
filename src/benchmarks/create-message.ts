@@ -32,4 +32,6 @@ export async function createMessage(threadId: string) {
   }
 
   logger.printSnapshots();
+
+  return logger.printSnapshots;
 }

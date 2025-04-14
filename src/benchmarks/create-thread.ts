@@ -33,5 +33,5 @@ export async function createThread() {
 
   logger.printSnapshots();
 
-  return threadId;
+  return [threadId, logger.printSnapshots] as [string, () => void];
 }
