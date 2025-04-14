@@ -1,0 +1,49 @@
+import "dotenv-flow/config";
+import fs from "fs";
+import path, { dirname } from "path";
+import { performance } from "perf_hooks";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+export function createLogger(name: string) {
+  const start = performance.now();
+
+  let last = start;
+  const logFilePath = path.resolve(__dirname, "../logs/", name);
+  console.log("logFilePath", logFilePath);
+
+  if (fs.existsSync(logFilePath)) fs.unlinkSync(logFilePath); // remove existing log file
+  fs.writeFileSync(logFilePath, ""); // create a new empty log file
+
+  function formatTime(delta: number) {
+    const seconds = Math.floor(delta / 1000);
+    const milliseconds = Math.floor(delta % 1000);
+    return `${seconds}s ${milliseconds}ms`;
+  }
+
+  function writeToFile(line: string) {
+    fs.appendFileSync(logFilePath, line + "\n");
+  }
+
+  return {
+    debug(message: string, ...optionalParams: any[]) {
+      const now = performance.now();
+      const totalElapsed = now - start;
+      const delta = now - last;
+      last = now;
+
+      const label = `[+${formatTime(totalElapsed)} | Δ${formatTime(delta)}]\n`;
+      const invertedLabel = `\x1b[7m${label}\x1b[0m`; // ANSI reverse/invert
+
+      const fullMsg = `${label} ${message}`;
+      const prettyMsg = `${invertedLabel} ${message}`;
+
+      console.debug(prettyMsg, ...optionalParams);
+      writeToFile(
+        fullMsg + (optionalParams.length ? ` ${optionalParams.join(" ")}` : ""),
+      );
+    },
+  };
+}
