@@ -12,7 +12,7 @@ console.log("starting");
   console.log("\n");
   const printCreateMessage = await createMessage(threadId);
   console.log("\n");
-  const printeToolExecution = await toolExecution(threadId);
+  const printToolExecution = await toolExecution(threadId);
 
   console.log("\n");
   console.log("openAiCreateMessage");
@@ -31,7 +31,7 @@ console.log("starting");
 
   console.log("\n");
   console.log("toolExecution");
-  printeToolExecution();
+  printToolExecution();
   await sleep();
 })();
 
