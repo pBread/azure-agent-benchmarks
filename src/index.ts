@@ -1,6 +1,7 @@
 import { toolExecution } from "./benchmarks/tool-execution.js";
+import { createThread } from "./benchmarks/create-thread.js";
 
 console.log("starting");
 (async () => {
-  await toolExecution();
+  const threadId = await createThread();
 })();

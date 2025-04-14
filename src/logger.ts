@@ -10,7 +10,8 @@ const __dirname = dirname(__filename);
 export function createLogger(name: string) {
   const start = performance.now();
 
-  let last = start;
+  let lastLog = start;
+  let lastSnap = start;
   const logFilePath = path.resolve(__dirname, "../logs/", name);
   console.log("logFilePath", logFilePath);
 
@@ -30,10 +31,10 @@ export function createLogger(name: string) {
   const log = (message: string, ...optionalParams: any[]) => {
     const now = performance.now();
     const totalElapsed = now - start;
-    const delta = now - last;
-    last = now;
+    const delta = now - lastLog;
+    lastLog = now;
 
-    const label = `[+${formatTime(totalElapsed)} | Δ${formatTime(delta)}]`;
+    const label = `[${formatTime(totalElapsed)} | Δ ${formatTime(delta)}]`;
     const invertedLabel = `\x1b[7m${label}\x1b[0m`; // ANSI reverse/invert
 
     const fullMsg = `${label} ${message} \n`;
@@ -45,5 +46,25 @@ export function createLogger(name: string) {
     );
   };
 
-  return { log };
+  const snapshots: string[] = [];
+  const snapshot = (title: string) => {
+    const now = performance.now();
+    const totalElapsed = now - start;
+    const delta = now - lastSnap;
+    lastSnap = now;
+
+    const label = `[${formatTime(totalElapsed)} | Δ ${formatTime(
+      delta,
+    )}]: ${title}`;
+
+    const message = `\x1b[32m${label}\x1b[0m`;
+
+    snapshots.push(message);
+    console.log(message);
+    writeToFile(message);
+  };
+
+  const printSnapshots = () => snapshots.forEach((msg) => console.log(msg));
+
+  return { log, snapshot, printSnapshots };
 }

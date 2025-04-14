@@ -1,4 +1,4 @@
-import { AIProjectsClient } from "@azure/ai-projects";
+import { AIProjectsClient, ThreadRunOutput } from "@azure/ai-projects";
 import { DefaultAzureCredential } from "@azure/identity";
 import { AGENT_ID, AZURE_CONN_STRING } from "../env.js";
 import { createLogger } from "../logger.js";
@@ -8,20 +8,21 @@ const client = AIProjectsClient.fromConnectionString(
   new DefaultAzureCredential(),
 );
 
-export async function toolExecution(threadId: string) {
-  const logger = createLogger("tool-execution.log");
+export async function createThread() {
+  const logger = createLogger("create-thread.log");
 
-  const run = await client.agents
-    .createRun(threadId, AGENT_ID, {
-      additionalMessages: [
-        { role: "user", content: "Lookup my profile, please." },
-      ],
-    })
-    .stream();
+  const run = await client.agents.createThreadAndRun(AGENT_ID).stream();
 
   const eventSet = new Set();
 
+  let threadId: string = "";
+
   for await (const chunk of run) {
+    if (chunk.event === "thread.run.created") {
+      const data = chunk.data as ThreadRunOutput;
+      threadId = data.id;
+    }
+
     if (!eventSet.has(chunk.event)) {
       logger.snapshot(chunk.event);
       eventSet.add(chunk.event);
@@ -31,4 +32,6 @@ export async function toolExecution(threadId: string) {
   }
 
   logger.printSnapshots();
+
+  return threadId;
 }
