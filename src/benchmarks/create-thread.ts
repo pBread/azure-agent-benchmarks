@@ -18,7 +18,7 @@ export async function createThread() {
   let threadId: string = "";
 
   for await (const chunk of run) {
-    if (chunk.event === "thread.run.created") {
+    if (chunk.event === "thread.created") {
       const data = chunk.data as ThreadRunOutput;
       threadId = data.id;
     }

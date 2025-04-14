@@ -10,6 +10,7 @@ const client = AIProjectsClient.fromConnectionString(
 
 export async function toolExecution(threadId: string) {
   const logger = createLogger("tool-execution.log");
+  logger.log(threadId);
 
   const run = await client.agents
     .createRun(threadId, AGENT_ID, {
