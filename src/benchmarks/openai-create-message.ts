@@ -58,7 +58,7 @@ There are several data types that require specific formatting.
 `;
 
 export async function openAiCreateMessage() {
-  const logger = createLogger("open-ai-create-message.log");
+  const logger = createLogger("open-ai-create-message");
 
   const run = await client.chat.completions.create({
     messages: [

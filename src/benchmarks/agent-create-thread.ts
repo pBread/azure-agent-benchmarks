@@ -9,7 +9,7 @@ const client = AIProjectsClient.fromConnectionString(
 );
 
 export async function createThread() {
-  const logger = createLogger("create-thread.log");
+  const logger = createLogger("create-thread");
 
   const run = await client.agents.createThreadAndRun(AGENT_ID).stream();
 

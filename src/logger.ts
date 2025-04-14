@@ -12,7 +12,7 @@ export function createLogger(name: string) {
 
   let lastLog = start;
   let lastSnap = start;
-  const logFilePath = path.resolve(__dirname, "../logs/", name);
+  const logFilePath = path.resolve(__dirname, "../logs/", `${name}.log`);
   console.log("logFilePath", logFilePath);
 
   if (fs.existsSync(logFilePath)) fs.unlinkSync(logFilePath); // remove existing log file
@@ -62,9 +62,28 @@ export function createLogger(name: string) {
     snapshots.push(message);
     console.log(message);
     writeToFile(message);
+
+    return { key: `${name}-${title}`, totalElapsed, delta } as SnapshotRecord;
   };
 
   const printSnapshots = () => snapshots.forEach((msg) => console.log(msg));
 
-  return { log, snapshot, printSnapshots };
+  const getTimes = () => {
+    const now = performance.now();
+
+    const totalElapsed = now - start;
+    const delta = now - lastSnap;
+    return { totalElapsed, delta };
+  };
+
+  return { log, snapshot, printSnapshots, getTimes };
+}
+
+export interface LoggerTimes {
+  totalElapsed: number;
+  delta: number;
+}
+
+export interface SnapshotRecord extends LoggerTimes {
+  key: string;
 }
