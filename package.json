@@ -2,8 +2,9 @@
   "author": "https://github.com/pBread",
   "name": "azure-agent-benchmarks",
   "version": "1.0.0",
+  "type": "module",
   "scripts": {
-    "dev": "nodemon --exec tsx src/app.ts --delay 1500ms --ignore /ui",
+    "route": "nodemon --exec tsx src/server.ts",
     "grok": "tsx scripts/ngrok.ts"
   },
   "dependencies": {
