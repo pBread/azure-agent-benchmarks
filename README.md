@@ -14,9 +14,25 @@ Populate the env vars. It should be self explanatory.
 
 Note, the `OPENAI_API_KEY` is optional. It is an API Key from the OpenAI platform. It's used as a benchmark.
 
-## Start Server for Tool
+## Start
+
+Open 3 terminals in this directory and run these commands.
+
+**Terminal 1**
 
 ```bash
+npm install
 npm run route
+```
+
+**Terminal 2**
+
+```bash
 npm run grok
+```
+
+**Terminal 3**
+
+```bash
+npm run benchmark
 ```

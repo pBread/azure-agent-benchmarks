@@ -1,7 +1,7 @@
 import "dotenv-flow/config";
 import { spawn, ChildProcess } from "child_process";
 
-const { HOSTNAME, PORT = "3333" } = process.env;
+const { HOSTNAME, PORT = "8080" } = process.env;
 
 async function execNgrok(args: string[] = []): Promise<number> {
   return new Promise((resolve) => {

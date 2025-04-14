@@ -1,7 +1,7 @@
 import express from "express";
 import ExpressWs from "express-ws";
 
-const PORT = "3333";
+const PORT = "8080";
 
 const { app } = ExpressWs(express());
 app.use(express.urlencoded({ extended: true })).use(express.json());
