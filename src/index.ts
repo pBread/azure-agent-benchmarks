@@ -9,12 +9,16 @@ console.log("starting");
   const printCreateMessage = await createMessage(threadId);
   console.log("\n");
   const printeToolExecution = await toolExecution(threadId);
-
-  console.log("results");
+  console.log("\n");
+  console.log("createThread");
   printCreateThread();
   await sleep();
+  console.log("\n");
+  console.log("createMessage");
   printCreateMessage();
   await sleep();
+  console.log("\n");
+  console.log("toolExecution");
   printeToolExecution();
   await sleep();
 })();
