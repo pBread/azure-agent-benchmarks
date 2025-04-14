@@ -18,6 +18,6 @@ export async function toolExecution() {
     .stream();
 
   for await (const chunk of run) {
-    logger.debug(chunk.event, "\n", JSON.stringify(chunk, null, 2));
+    logger.log(chunk.event, "\n", JSON.stringify(chunk, null, 2));
   }
 }
