@@ -6,13 +6,17 @@ import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+const logDir = path.resolve(__dirname, "../logs");
+
+if (!fs.existsSync(logDir)) fs.mkdirSync(logDir, { recursive: true });
 
 export function createLogger(name: string) {
   const start = performance.now();
 
   let lastLog = start;
   let lastSnap = start;
-  const logFilePath = path.resolve(__dirname, "../logs/", `${name}.log`);
+
+  const logFilePath = path.resolve(logDir, `${name}.log`);
   console.log("logFilePath", logFilePath);
 
   if (fs.existsSync(logFilePath)) fs.unlinkSync(logFilePath); // remove existing log file

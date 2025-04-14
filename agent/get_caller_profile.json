@@ -1,0 +1,50 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Caller Profile API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://your-ngrok-domain.app"
+    }
+  ],
+  "paths": {
+    "/get_caller_profile": {
+      "get": {
+        "summary": "Get Caller Profile",
+        "description": "Fetches the caller's profile data.",
+        "operationId": "getCallerProfile",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved caller profile.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "firstName": {
+                      "type": "string"
+                    },
+                    "lastName": {
+                      "type": "string"
+                    },
+                    "callerPhoneNumber": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["firstName", "lastName", "callerPhoneNumber"],
+                  "example": {
+                    "firstName": "John",
+                    "lastName": "Doe",
+                    "callerPhoneNumber": "555-123-4567"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

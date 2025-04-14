@@ -1,8 +1,3 @@
-import OpenAI from "openai";
-import { AGENT_ID, OPENAI_API_KEY } from "../env.js";
-import { createLogger } from "../logger.js";
-
-const instructions = `\
 # Purpose
 
 You are a voice assistant answering phone calls for Owl Marketplace, an e-commerce marketplace where merchants can list products and buyers can purchase them.
@@ -53,44 +48,3 @@ There are several data types that require specific formatting.
   - When calling tools, always use 24 hour format. Example: "19:30"
 
 - Avoid Exclamation Points: Use exclamation points very sparingly.
-`;
-
-export async function openAiCreateMessage() {
-  const logger = createLogger("open-ai-create-message");
-  if (!OPENAI_API_KEY) {
-    console.log("No OPENAI_API_KEY");
-    return logger.printSnapshots;
-  }
-  const client = new OpenAI({ apiKey: OPENAI_API_KEY });
-
-  const run = await client.chat.completions.create({
-    messages: [
-      { role: "system", content: instructions },
-      { role: "user", content: "Hello, how are you today?" },
-    ],
-    model: "gpt-4o",
-    stream: true,
-  });
-
-  const eventSet = new Set();
-
-  let hasFirstTextHappened = false;
-  for await (const chunk of run) {
-    const choice = chunk.choices[0];
-    const delta = choice.delta;
-
-    if (delta.content && !hasFirstTextHappened) {
-      logger.snapshot("first text");
-      hasFirstTextHappened = true;
-    }
-
-    logger.log("chunk\n", JSON.stringify(chunk, null, 2));
-  }
-
-  logger.snapshot("completion finished");
-
-  console.log("\n");
-  logger.printSnapshots();
-
-  return logger.printSnapshots;
-}
