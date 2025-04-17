@@ -1,11 +1,20 @@
 import { createMessage } from "./benchmarks/agent-create-message.js";
 import { createThread } from "./benchmarks/agent-create-thread.js";
 import { toolExecution } from "./benchmarks/agent-tool-execution.js";
-import { openAiCreateMessage } from "./benchmarks/openai-create-message.js";
+import { openAiCompletionCreateMessage } from "./benchmarks/openai-create-message.js";
+import { openaiResponseSimple } from "./benchmarks/openai-response-simple.js";
+import { openaiResponseTool } from "./benchmarks/openai-response-tools.js";
 
 console.log("starting");
 (async () => {
-  const printOpenAiCreateMessage = await openAiCreateMessage();
+  const printOpenAiCompletionCreateMessage =
+    await openAiCompletionCreateMessage();
+  console.log("\n");
+
+  const printOpenaiResponseSimple = await openaiResponseSimple();
+  console.log("\n");
+
+  const printOpenaiResponseTool = await openaiResponseTool();
   console.log("\n");
 
   const [threadId, printCreateThread] = await createThread();
@@ -13,11 +22,6 @@ console.log("starting");
   const printCreateMessage = await createMessage(threadId);
   console.log("\n");
   const printToolExecution = await toolExecution(threadId);
-
-  console.log("\n");
-  console.log("openAiCreateMessage");
-  printOpenAiCreateMessage();
-  await sleep();
 
   console.log("\n");
   console.log("createThread");
@@ -32,6 +36,25 @@ console.log("starting");
   console.log("\n");
   console.log("toolExecution");
   printToolExecution();
+  await sleep();
+
+  console.log("printOpenAiCompletionCreateMessage");
+  printOpenAiCompletionCreateMessage();
+  await sleep();
+  console.log("\n");
+
+  console.log("printOpenaiResponseTool");
+  printOpenaiResponseTool();
+  await sleep();
+  console.log("\n");
+
+  console.log("printOpenaiResponseSimple");
+  printOpenaiResponseSimple();
+  await sleep();
+  console.log("\n");
+
+  console.log("printOpenaiResponseTool");
+  printOpenaiResponseTool();
   await sleep();
 })();
 

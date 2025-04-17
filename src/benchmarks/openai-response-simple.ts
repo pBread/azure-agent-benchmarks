@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { AGENT_ID, OPENAI_API_KEY } from "../env.js";
+import { OPENAI_API_KEY } from "../env.js";
 import { createLogger } from "../logger.js";
 
 const instructions = `\
@@ -55,39 +55,32 @@ There are several data types that require specific formatting.
 - Avoid Exclamation Points: Use exclamation points very sparingly.
 `;
 
-export async function openAiCompletionCreateMessage() {
-  const logger = createLogger("open-ai-completion-create-message");
+export async function openaiResponseSimple() {
+  const logger = createLogger("openai-response-simple");
   if (!OPENAI_API_KEY) {
     console.log("No OPENAI_API_KEY");
     return logger.printSnapshots;
   }
   const client = new OpenAI({ apiKey: OPENAI_API_KEY });
 
-  const run = await client.chat.completions.create({
-    messages: [
-      { role: "system", content: instructions },
-      { role: "user", content: "Hello, how are you today?" },
-    ],
+  const stream = await client.responses.create({
     model: "gpt-4o",
+    input: [{ role: "user", content: "Hello, how are you today?" }],
     stream: true,
   });
 
   const eventSet = new Set();
 
-  let hasFirstTextHappened = false;
-  for await (const chunk of run) {
-    const choice = chunk.choices[0];
-    const delta = choice.delta;
-
-    if (delta.content && !hasFirstTextHappened) {
-      logger.snapshot("first text");
-      hasFirstTextHappened = true;
+  for await (const chunk of stream) {
+    if (!eventSet.has(chunk.type)) {
+      logger.snapshot(chunk.type);
+      eventSet.add(chunk.type);
     }
 
     logger.log("chunk\n", JSON.stringify(chunk, null, 2));
   }
 
-  logger.snapshot("completion finished");
+  logger.snapshot("stream finished");
 
   console.log("\n");
   logger.printSnapshots();
